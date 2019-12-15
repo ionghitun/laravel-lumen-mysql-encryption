@@ -1,0 +1,30 @@
+{
+  "name": "ionghitun/laravel-lumen-mysql-encryption",
+  "description": "Database fields encryption in laravel and lumen for mysql databases with native search.",
+  "type": "library",
+  "require": {
+    "php": ">=7.1",
+    "illuminate/database": ">=5.7",
+    "ext-openssl": "*"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ion Ghitun",
+      "email": "ionghitun@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": {
+      "IonGhitun\\MysqlEncryption\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "IonGhitun\\MysqlEncryption\\MysqlEncryptionServiceProvider"
+      ]
+    }
+  }
+}
