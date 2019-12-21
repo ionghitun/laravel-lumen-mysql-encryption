@@ -34,16 +34,11 @@ class MysqlEncryptionServiceProvider extends ServiceProvider
                 throw new \Exception('unique_encrypted requires at least one parameter');
             }
 
-            $table = $parameters[0];
             $field = isset($parameters[1]) ? $parameters[1] : $attribute;
 
-            $items = DB::select("SELECT count(*) as aggregate FROM `" . $table . "` WHERE AES_DECRYPT(`" . $field . "`, '" . env("ENCRYPTION_KEY") . "') LIKE '" . $value . "' COLLATE utf8mb4_general_ci");
+            $items = DB::select("SELECT count(*) as aggregate FROM `" . $parameters[0] . "` WHERE AES_DECRYPT(`" . $field . "`, '" . env("ENCRYPTION_KEY") . "') LIKE '" . $value . "' COLLATE utf8mb4_general_ci");
 
-            if ($items[0]->aggregate > 0) {
-                return false;
-            } else {
-                return true;
-            }
+            return $items[0]->aggregate === 0;
         });
 
         /**
@@ -54,16 +49,11 @@ class MysqlEncryptionServiceProvider extends ServiceProvider
                 throw new \Exception('exists_encrypted requires at least one parameter');
             }
 
-            $table = $parameters[0];
             $field = isset($parameters[1]) ? $parameters[1] : $attribute;
 
-            $items = DB::select("SELECT count(*) as aggregate FROM `" . $table . "` WHERE AES_DECRYPT(`" . $field . "`, '" . env("ENCRYPTION_KEY") . "') LIKE '" . $value . "' COLLATE utf8mb4_general_ci");
+            $items = DB::select("SELECT count(*) as aggregate FROM `" . $parameters[0] . "` WHERE AES_DECRYPT(`" . $field . "`, '" . env("ENCRYPTION_KEY") . "') LIKE '" . $value . "' COLLATE utf8mb4_general_ci");
 
-            if ($items[0]->aggregate < 1) {
-                return false;
-            } else {
-                return true;
-            }
+            return $items[0]->aggregate > 0;
         });
     }
 
@@ -72,6 +62,5 @@ class MysqlEncryptionServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
     }
 }

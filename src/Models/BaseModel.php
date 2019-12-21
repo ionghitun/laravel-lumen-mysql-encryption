@@ -4,6 +4,7 @@ namespace IonGhitun\MysqlEncryption\Models;
 
 use Faker\Factory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
 
 /**
@@ -184,13 +185,13 @@ class BaseModel extends Model
     /**
      * where for encrypted columns
      *
-     * @param $query
+     * @param Builder $query
      * @param $field
      * @param $value
      *
-     * @return mixed
+     * @return Builder
      */
-    public function scopeWhereEncrypted($query, $field, $value)
+    public function scopeWhereEncrypted(Builder $query, $field, $value)
     {
         return $query->whereRaw('AES_DECRYPT(' . $field . ', "' . env("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
     }
@@ -198,13 +199,13 @@ class BaseModel extends Model
     /**
      * orWhere for encrypted columns
      *
-     * @param $query
+     * @param Builder $query
      * @param $field
      * @param $value
      *
-     * @return mixed
+     * @return Builder
      */
-    public function scopeOrWhereEncrypted($query, $field, $value)
+    public function scopeOrWhereEncrypted(Builder $query, $field, $value)
     {
         return $query->orWhereRaw('AES_DECRYPT(' . $field . ', "' . env("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
     }

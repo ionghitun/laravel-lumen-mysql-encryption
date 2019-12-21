@@ -4,7 +4,6 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ionghitun/laravel-lumen-mysql-encryption/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ionghitun/laravel-lumen-mysql-encryption/?branch=master)
 [![License](https://poser.pugx.org/ionghitun/laravel-lumen-mysql-encryption/license)](https://packagist.org/packages/ionghitun/laravel-lumen-mysql-encryption)
 
-
 # Laravel Mysql Encryption
 
 Database fields encryption in laravel and lumen for mysql databases with native search.
@@ -43,3 +42,27 @@ You can use Validator on these fields with:
 - exists_encrypted
 
         exists_encrypted:<table>,<field(optional)>
+
+Possibility to anonymize data:
+
+- set `$anonymizable` variable on your model, the data will be anonymize using https://github.com/fzaninotto/Faker, for all the types available check this package.
+
+Example:
+
+        //without extra parameters needed for randomDigit
+        protected $anonymizable = [
+            'age' => ['randomDigit']
+        ];
+        
+        //with extra parameters needed for numberBetween
+        protected $anonymizable = [
+            'age' => ['numberBetween', '18','50']
+        ];
+        
+- get your model instance  and use anonymize method: `$user->anonymize();`
+
+The method accepts a locale parameter, if you want to use faker with localization, the default locale can be set in `.env` file: `APP_LOCALE = 'en_US'`
+
+If is not specified by any method above, the default Faker local will be used by default
+
+Note: Model is not automatically saved!
