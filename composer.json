@@ -1,12 +1,14 @@
 {
   "name": "ionghitun/laravel-lumen-mysql-encryption",
-  "description": "Database fields encryption in laravel and lumen for mysql databases with native search.",
-  "type": "library",
-  "require": {
-    "php": ">=7.1",
-    "illuminate/database": ">=5.7",
-    "ext-openssl": "*"
-  },
+  "description": "Database fields encryption in laravel and lumen for mysql databases with native search and anonymize data for gdpr.",
+  "keywords": [
+    "laravel",
+    "lumen",
+    "mysql",
+    "encryption",
+    "anonymize",
+    "gdpr"
+  ],
   "license": "MIT",
   "authors": [
     {
@@ -14,10 +16,27 @@
       "email": "ionghitun@gmail.com"
     }
   ],
+  "homepage": "https://github.com/ionghitun/laravel-lumen-mysql-encryption",
+  "type": "library",
+  "require": {
+    "php": ">=7.1",
+    "illuminate/database": ">=5.7",
+    "ext-openssl": "*",
+    "fzaninotto/faker": "^1.9"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.5",
+    "mockery/mockery": "^1.3"
+  },
   "minimum-stability": "stable",
   "autoload": {
     "psr-4": {
       "IonGhitun\\MysqlEncryption\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "IonGhitun\\MysqlEncryption\\Tests\\": "tests/"
     }
   },
   "extra": {

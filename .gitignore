@@ -3,3 +3,7 @@
 
 #misc
 vendor
+
+#phpunit
+.phpunit.result.cache
+coverage

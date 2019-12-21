@@ -1,3 +1,8 @@
+[![Latest Stable Version](https://poser.pugx.org/ionghitun/laravel-lumen-mysql-encryption/v/stable)](https://packagist.org/packages/ionghitun/laravel-lumen-mysql-encryption)
+[![Total Downloads](https://poser.pugx.org/ionghitun/laravel-lumen-mysql-encryption/downloads)](https://packagist.org/packages/ionghitun/laravel-lumen-mysql-encryption)
+[![License](https://poser.pugx.org/ionghitun/laravel-lumen-mysql-encryption/license)](https://packagist.org/packages/ionghitun/laravel-lumen-mysql-encryption)
+
+
 # Laravel Mysql Encryption
 
 Database fields encryption in laravel and lumen for mysql databases with native search.

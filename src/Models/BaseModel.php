@@ -2,6 +2,7 @@
 
 namespace IonGhitun\MysqlEncryption\Models;
 
+use Faker\Factory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
@@ -12,8 +13,24 @@ use Illuminate\Support\Arr;
  */
 class BaseModel extends Model
 {
-    /** @var array */
+    /**
+     * Elements should be the names of the fields
+     *
+     * @var array
+     */
     protected $encrypted = [];
+
+    /**
+     * Elements should be pairs with key column name and value and array with type and optional parameters
+     *
+     * @example ['age' => ['randomDigit']]
+     * @example ['age' => ['numberBetween', '18','50']]
+     *
+     * Available types: https://github.com/fzaninotto/Faker
+     *
+     * @var array
+     */
+    protected $anonymizable = [];
 
     /**
      * Get model attribute
@@ -33,7 +50,7 @@ class BaseModel extends Model
         }
 
         if (in_array($key, $this->encrypted)) {
-            $value = $this->aes_decrypt($value);
+            $value = $this->aesDecrypt($value);
         }
 
         return $value;
@@ -48,11 +65,11 @@ class BaseModel extends Model
      *
      * @return false|string
      */
-    function aes_decrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
+    protected function aesDecrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
     {
         $secret = env('ENCRYPTION_KEY');
 
-        $key = $mySqlKey ? $this->generate_mysql_aes_key($secret) : $secret;
+        $key = $mySqlKey ? $this->generateMysqlAesKey($secret) : $secret;
 
         return openssl_decrypt($val, $cypher, $key, true);
     }
@@ -64,7 +81,7 @@ class BaseModel extends Model
      *
      * @return string
      */
-    protected function generate_mysql_aes_key($key)
+    protected function generateMysqlAesKey($key)
     {
         $generatedKey = str_repeat(chr(0), 16);
 
@@ -85,7 +102,7 @@ class BaseModel extends Model
     public function setAttribute($key, $value)
     {
         if (in_array($key, $this->encrypted)) {
-            $value = $this->aes_encrypt($value);
+            $value = $this->aesEncrypt($value);
         }
 
         return parent::setAttribute($key, $value);
@@ -100,11 +117,11 @@ class BaseModel extends Model
      *
      * @return string
      */
-    protected function aes_encrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
+    protected function aesEncrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
     {
         $secret = env('ENCRYPTION_KEY');
 
-        $key = $mySqlKey ? $this->generate_mysql_aes_key($secret) : $secret;
+        $key = $mySqlKey ? $this->generateMysqlAesKey($secret) : $secret;
 
         return openssl_encrypt($val, $cypher, $key, true);
     }
@@ -120,7 +137,7 @@ class BaseModel extends Model
 
         foreach ($this->encrypted as $key) {
             if (isset($attributes[$key])) {
-                $attributes[$key] = $this->aes_decrypt($attributes[$key]);
+                $attributes[$key] = $this->aesDecrypt($attributes[$key]);
             }
         }
 
@@ -138,7 +155,7 @@ class BaseModel extends Model
     public function getOriginal($key = null, $default = null)
     {
         if (in_array($key, $this->encrypted)) {
-            return $this->aes_decrypt(Arr::get($this->original, $key, $default));
+            return $this->aesDecrypt(Arr::get($this->original, $key, $default));
         }
 
         return Arr::get($this->original, $key, $default);
@@ -152,6 +169,16 @@ class BaseModel extends Model
     public function getEncrypted()
     {
         return $this->encrypted;
+    }
+
+    /**
+     * Get anonymizable columns
+     *
+     * @return array
+     */
+    public function getAnonymizable()
+    {
+        return $this->anonymizable;
     }
 
     /**
@@ -180,5 +207,21 @@ class BaseModel extends Model
     public function scopeOrWhereEncrypted($query, $field, $value)
     {
         return $query->orWhereRaw('AES_DECRYPT(' . $field . ', "' . env("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
+    }
+
+    /**
+     * Anonymize model fields
+     *
+     * @param null $locale
+     */
+    public function anonymize($locale = null)
+    {
+        $faker = Factory::create($locale ?? env('FAKER_LOCALE', Factory::DEFAULT_LOCALE));
+
+        foreach ($this->anonymizable as $field => $type) {
+            if (in_array($field, $this->attributes)) {
+                $this->$field = call_user_func([$faker, $type[0]], array_slice($type, 1));
+            }
+        }
     }
 }
