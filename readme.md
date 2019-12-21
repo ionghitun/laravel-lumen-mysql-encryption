@@ -1,5 +1,5 @@
 [![Latest Stable Version](https://poser.pugx.org/ionghitun/laravel-lumen-mysql-encryption/v/stable)](https://packagist.org/packages/ionghitun/laravel-lumen-mysql-encryption)
-[![Build Status](https://scrutinizer-ci.com/g/ionghitun/laravel-lumen-mysql-encryption/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ionghitun/laravel-lumen-mysql-encryption/build-status/master)
+[![Build Status](https://travis-ci.com/ionghitun/laravel-lumen-mysql-encryption.svg?branch=master)](https://travis-ci.com/ionghitun/laravel-lumen-mysql-encryption)
 [![Total Downloads](https://poser.pugx.org/ionghitun/laravel-lumen-mysql-encryption/downloads)](https://packagist.org/packages/ionghitun/laravel-lumen-mysql-encryption)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ionghitun/laravel-lumen-mysql-encryption/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ionghitun/laravel-lumen-mysql-encryption/?branch=master)
 [![License](https://poser.pugx.org/ionghitun/laravel-lumen-mysql-encryption/license)](https://packagist.org/packages/ionghitun/laravel-lumen-mysql-encryption)
