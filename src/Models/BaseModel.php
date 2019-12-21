@@ -37,7 +37,7 @@ class BaseModel extends Model
      *
      * @param string $key
      *
-     * @return mixed
+     * @return false|mixed|string
      */
     public function getAttribute($key)
     {
@@ -71,7 +71,7 @@ class BaseModel extends Model
 
         $key = $mySqlKey ? $this->generateMysqlAesKey($secret) : $secret;
 
-        return openssl_decrypt($val, $cypher, $key, true);
+        return openssl_decrypt($val, $cypher, $key, 1);
     }
 
     /**
@@ -97,7 +97,7 @@ class BaseModel extends Model
      * @param string $key
      * @param mixed $value
      *
-     * @return Model
+     * @return mixed
      */
     public function setAttribute($key, $value)
     {
@@ -115,7 +115,7 @@ class BaseModel extends Model
      * @param string $cypher
      * @param bool $mySqlKey
      *
-     * @return string
+     * @return false|string
      */
     protected function aesEncrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
     {
@@ -123,7 +123,7 @@ class BaseModel extends Model
 
         $key = $mySqlKey ? $this->generateMysqlAesKey($secret) : $secret;
 
-        return openssl_encrypt($val, $cypher, $key, true);
+        return openssl_encrypt($val, $cypher, $key, 1);
     }
 
     /**
@@ -147,10 +147,10 @@ class BaseModel extends Model
     /**
      * Get original not encrypted
      *
-     * @param null $key
-     * @param null $default
+     * @param string|int|null $key
+     * @param mixed|null $default
      *
-     * @return array|mixed|string
+     * @return array|false|mixed|string
      */
     public function getOriginal($key = null, $default = null)
     {
@@ -212,7 +212,7 @@ class BaseModel extends Model
     /**
      * Anonymize model fields
      *
-     * @param null $locale
+     * @param string|null $locale
      */
     public function anonymize($locale = null)
     {

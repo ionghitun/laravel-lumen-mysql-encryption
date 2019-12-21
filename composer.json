@@ -19,7 +19,7 @@
   "homepage": "https://github.com/ionghitun/laravel-lumen-mysql-encryption",
   "type": "library",
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.2",
     "illuminate/database": ">=5.7",
     "ext-openssl": "*",
     "fzaninotto/faker": "^1.9"
