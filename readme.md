@@ -6,11 +6,15 @@
 
 # Laravel Mysql Encryption
 
-Database fields encryption in laravel and lumen for mysql databases with native search.
+Database fields encryption in laravel and lumen for mysql databases with native search and anonymize data.
 
 ## Instalation notes
 
 `$ composer require ionghitun/laravel-lumen-mysql-encryption`
+
+## Dependencies
+
+- php >= 7.2
 
 ## Documentation:
 

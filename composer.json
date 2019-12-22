@@ -2,6 +2,7 @@
   "name": "ionghitun/laravel-lumen-mysql-encryption",
   "description": "Database fields encryption in laravel and lumen for mysql databases with native search and anonymize data for gdpr.",
   "keywords": [
+    "ionghitun",
     "laravel",
     "lumen",
     "mysql",
