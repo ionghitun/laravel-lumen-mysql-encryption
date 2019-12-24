@@ -65,7 +65,7 @@ Example:
         
 - get your model instance  and use anonymize method: `$user->anonymize();`
 
-The method accepts a locale parameter, if you want to use faker with localization, the default locale can be set in `.env` file: `APP_LOCALE = 'en_US'`
+The method accepts a locale parameter, if you want to use faker with localization, the default locale can be set in `.env` file: `FAKER_LOCALE = 'en_US'`
 
 If is not specified by any method above, the default Faker local will be used by default
 
