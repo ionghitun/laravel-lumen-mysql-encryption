@@ -68,7 +68,7 @@ class BaseModel extends Model
      */
     protected function aesDecrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
     {
-        $secret = env('ENCRYPTION_KEY');
+        $secret = getenv('ENCRYPTION_KEY');
 
         $key = $mySqlKey ? $this->generateMysqlAesKey($secret) : $secret;
 
@@ -120,7 +120,7 @@ class BaseModel extends Model
      */
     protected function aesEncrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
     {
-        $secret = env('ENCRYPTION_KEY');
+        $secret = getenv('ENCRYPTION_KEY');
 
         $key = $mySqlKey ? $this->generateMysqlAesKey($secret) : $secret;
 
@@ -193,7 +193,7 @@ class BaseModel extends Model
      */
     public function scopeWhereEncrypted(Builder $query, $field, $value)
     {
-        return $query->whereRaw('AES_DECRYPT(' . $field . ', "' . env("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
+        return $query->whereRaw('AES_DECRYPT(' . $field . ', "' . getenv("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
     }
 
     /**
@@ -207,7 +207,7 @@ class BaseModel extends Model
      */
     public function scopeOrWhereEncrypted(Builder $query, $field, $value)
     {
-        return $query->orWhereRaw('AES_DECRYPT(' . $field . ', "' . env("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
+        return $query->orWhereRaw('AES_DECRYPT(' . $field . ', "' . getenv("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
     }
 
     /**
@@ -217,11 +217,17 @@ class BaseModel extends Model
      */
     public function anonymize($locale = null)
     {
-        $faker = Factory::create($locale ?? env('FAKER_LOCALE', Factory::DEFAULT_LOCALE));
+        $faker = Factory::create($locale ?? (getenv('FAKER_LOCALE') ?? Factory::DEFAULT_LOCALE));
 
         foreach ($this->anonymizable as $field => $type) {
             if (in_array($field, $this->attributes)) {
-                $this->$field = call_user_func([$faker, $type[0]], array_slice($type, 1));
+                $method = $type[0];
+
+                if (count($type) > 1) {
+                    $this->$field = call_user_func([$faker, $method], array_slice($type, 1));
+                } else {
+                    $this->$field = $faker->$method;
+                }
             }
         }
     }

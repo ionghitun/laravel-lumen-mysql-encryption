@@ -36,7 +36,7 @@ class MysqlEncryptionServiceProvider extends ServiceProvider
 
             $field = isset($parameters[1]) ? $parameters[1] : $attribute;
 
-            $items = DB::select("SELECT count(*) as aggregate FROM `" . $parameters[0] . "` WHERE AES_DECRYPT(`" . $field . "`, '" . env("ENCRYPTION_KEY") . "') LIKE '" . $value . "' COLLATE utf8mb4_general_ci");
+            $items = DB::select("SELECT count(*) as aggregate FROM `" . $parameters[0] . "` WHERE AES_DECRYPT(`" . $field . "`, '" . getenv("ENCRYPTION_KEY") . "') LIKE '" . $value . "' COLLATE utf8mb4_general_ci");
 
             return $items[0]->aggregate === 0;
         });
@@ -51,7 +51,7 @@ class MysqlEncryptionServiceProvider extends ServiceProvider
 
             $field = isset($parameters[1]) ? $parameters[1] : $attribute;
 
-            $items = DB::select("SELECT count(*) as aggregate FROM `" . $parameters[0] . "` WHERE AES_DECRYPT(`" . $field . "`, '" . env("ENCRYPTION_KEY") . "') LIKE '" . $value . "' COLLATE utf8mb4_general_ci");
+            $items = DB::select("SELECT count(*) as aggregate FROM `" . $parameters[0] . "` WHERE AES_DECRYPT(`" . $field . "`, '" . getenv("ENCRYPTION_KEY") . "') LIKE '" . $value . "' COLLATE utf8mb4_general_ci");
 
             return $items[0]->aggregate > 0;
         });

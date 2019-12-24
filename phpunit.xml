@@ -15,8 +15,16 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="coverage" lowUpperBound="35" highLowerBound="70"/>
+    </logging>
     <php>
-        <server name="ENCRYPTION_KEY" value="secret16charlong"/>
-        <server name="FAKER_LOCALE" value="en_US"/>
+        <env name="ENCRYPTION_KEY" value="secret16charlong"/>
+        <env name="FAKER_LOCALE" value="en_US"/>
     </php>
 </phpunit>
