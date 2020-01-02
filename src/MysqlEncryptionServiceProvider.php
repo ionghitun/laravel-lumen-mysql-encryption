@@ -2,6 +2,7 @@
 
 namespace IonGhitun\MysqlEncryption;
 
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
@@ -31,7 +32,7 @@ class MysqlEncryptionServiceProvider extends ServiceProvider
          */
         Validator::extend('unique_encrypted', function ($attribute, $value, array $parameters) {
             if (!isset($parameters[0])) {
-                throw new \Exception('unique_encrypted requires at least one parameter');
+                throw new Exception('unique_encrypted requires at least one parameter');
             }
 
             $field = isset($parameters[1]) ? $parameters[1] : $attribute;
@@ -46,7 +47,7 @@ class MysqlEncryptionServiceProvider extends ServiceProvider
          */
         Validator::extend('exists_encrypted', function ($attribute, $value, array $parameters) {
             if (!isset($parameters[0])) {
-                throw new \Exception('exists_encrypted requires at least one parameter');
+                throw new Exception('exists_encrypted requires at least one parameter');
             }
 
             $field = isset($parameters[1]) ? $parameters[1] : $attribute;
