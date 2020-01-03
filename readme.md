@@ -46,6 +46,12 @@ You can use Validator on these fields with:
 - exists_encrypted
 
         exists_encrypted:<table>,<field(optional)>
+        
+You cannot use basic where, orWhere, orderBy on encrypted fields so there are 3 predefined scopes that you can use as a replacer:
+
+- whereEncrypted
+- orWhereEncrypted
+- orderByEncrypted
 
 Possibility to anonymize data:
 
@@ -70,3 +76,5 @@ The method accepts a locale parameter, if you want to use faker with localizatio
 If is not specified by any method above, the default Faker local will be used by default
 
 Note: Model is not automatically saved!
+
+_Happy coding!_

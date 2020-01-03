@@ -50,7 +50,7 @@ class BaseModel extends Model
         }
 
         if (in_array($key, $this->encrypted)) {
-            $value = $this->aesDecrypt($value);
+            return $this->aesDecrypt($value);
         }
 
         return $value;
@@ -65,7 +65,7 @@ class BaseModel extends Model
      *
      * @return false|string
      */
-    protected function aesDecrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
+    private function aesDecrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
     {
         $secret = getenv('ENCRYPTION_KEY');
 
@@ -81,13 +81,14 @@ class BaseModel extends Model
      *
      * @return string
      */
-    protected function generateMysqlAesKey($key)
+    private function generateMysqlAesKey($key)
     {
         $generatedKey = str_repeat(chr(0), 16);
 
         for ($i = 0, $len = strlen($key); $i < $len; $i++) {
             $generatedKey[$i % 16] = $generatedKey[$i % 16] ^ $key[$i];
         }
+
         return $generatedKey;
     }
 
@@ -117,7 +118,7 @@ class BaseModel extends Model
      *
      * @return false|string
      */
-    protected function aesEncrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
+    private function aesEncrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
     {
         $secret = getenv('ENCRYPTION_KEY');
 
@@ -182,34 +183,6 @@ class BaseModel extends Model
     }
 
     /**
-     * where for encrypted columns
-     *
-     * @param $query
-     * @param $field
-     * @param $value
-     *
-     * @return mixed
-     */
-    public function scopeWhereEncrypted($query, $field, $value)
-    {
-        return $query->whereRaw('AES_DECRYPT(' . $field . ', "' . getenv("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
-    }
-
-    /**
-     * orWhere for encrypted columns
-     *
-     * @param $query
-     * @param $field
-     * @param $value
-     *
-     * @return mixed
-     */
-    public function scopeOrWhereEncrypted($query, $field, $value)
-    {
-        return $query->orWhereRaw('AES_DECRYPT(' . $field . ', "' . getenv("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
-    }
-
-    /**
      * Anonymize model fields
      *
      * @param string|null $locale
@@ -229,5 +202,47 @@ class BaseModel extends Model
                 }
             }
         }
+    }
+
+    /**
+     * where for encrypted columns
+     *
+     * @param $query
+     * @param $column
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function scopeWhereEncrypted($query, $column, $value)
+    {
+        return $query->whereRaw('AES_DECRYPT(' . $column . ', "' . getenv("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
+    }
+
+    /**
+     * orWhere for encrypted columns
+     *
+     * @param $query
+     * @param $column
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function scopeOrWhereEncrypted($query, $column, $value)
+    {
+        return $query->orWhereRaw('AES_DECRYPT(' . $column . ', "' . getenv("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
+    }
+
+    /**
+     * orderBy for encrypted columns
+     *
+     * @param $query
+     * @param $column
+     * @param $direction
+     *
+     * @return mixed
+     */
+    public function scopeOrderByEncrypted($query, $column, $direction)
+    {
+        return $query->orderByRaw('AES_DECRYPT(' . $column . ', "' . getenv("ENCRYPTION_KEY") . '") ' . $direction);
     }
 }
