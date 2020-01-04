@@ -219,6 +219,20 @@ class BaseModel extends Model
     }
 
     /**
+     * where not for encrypted columns
+     *
+     * @param $query
+     * @param $column
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function scopeWhereNotEncrypted($query, $column, $value)
+    {
+        return $query->whereRaw('AES_DECRYPT(' . $column . ', "' . getenv("ENCRYPTION_KEY") . '") NOT LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
+    }
+
+    /**
      * orWhere for encrypted columns
      *
      * @param $query
@@ -230,6 +244,20 @@ class BaseModel extends Model
     public function scopeOrWhereEncrypted($query, $column, $value)
     {
         return $query->orWhereRaw('AES_DECRYPT(' . $column . ', "' . getenv("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
+    }
+
+    /**
+     * orWhere not for encrypted columns
+     *
+     * @param $query
+     * @param $column
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function scopeOrWhereNotEncrypted($query, $column, $value)
+    {
+        return $query->orWhereRaw('AES_DECRYPT(' . $column . ', "' . getenv("ENCRYPTION_KEY") . '") NOT LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
     }
 
     /**
