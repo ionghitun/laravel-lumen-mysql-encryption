@@ -65,7 +65,7 @@ class BaseModel extends Model
      *
      * @return false|string
      */
-    protected function aesDecrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
+    public function aesDecrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
     {
         $secret = getenv('ENCRYPTION_KEY');
 
@@ -118,7 +118,7 @@ class BaseModel extends Model
      *
      * @return false|string
      */
-    protected function aesEncrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
+    public function aesEncrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
     {
         $secret = getenv('ENCRYPTION_KEY');
 
