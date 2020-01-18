@@ -21,7 +21,7 @@
   "type": "library",
   "require": {
     "php": ">=7.2",
-    "illuminate/database": ">=5.7",
+    "illuminate/database": ">=5.8",
     "ext-openssl": "*",
     "fzaninotto/faker": "^1.9"
   },
