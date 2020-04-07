@@ -47,10 +47,12 @@ You can use Validator on these fields with:
 
         exists_encrypted:<table>,<field(optional)>
         
-You cannot use basic where, orWhere, orderBy on encrypted fields so there are 3 predefined scopes that you can use as a replacer:
+You cannot use basic where, orWhere, orderBy on encrypted fields so there are 5 predefined scopes that you can use as a replacer:
 
 - whereEncrypted
+- whereNotEncrypted
 - orWhereEncrypted
+- orWhereNotEncrypted
 - orderByEncrypted
 
 Possibility to anonymize data:

@@ -3,11 +3,18 @@
 namespace IonGhitun\MysqlEncryption\Models;
 
 use Faker\Factory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 /**
  * Class BaseModel
+ *
+ * @method static Builder|self whereEncrypted($column, $value)
+ * @method static Builder|self whereNotEncrypted($column, $value)
+ * @method static Builder|self orWhereEncrypted($column, $value)
+ * @method static Builder|self orWhereNotEncrypted($column, $value)
+ * @method static Builder|self orderByEncrypted($column, $direction)
  *
  * @package IonGhitun\MysqlEncryption\Models
  */
@@ -57,7 +64,7 @@ class BaseModel extends Model
     }
 
     /**
-     * Descrypt value
+     * Decrypt value
      *
      * @param $val
      * @param string $cypher
@@ -215,6 +222,7 @@ class BaseModel extends Model
      */
     public function scopeWhereEncrypted($query, $column, $value)
     {
+        /** @var Builder $query */
         return $query->whereRaw('AES_DECRYPT(' . $column . ', "' . getenv("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
     }
 
@@ -229,6 +237,7 @@ class BaseModel extends Model
      */
     public function scopeWhereNotEncrypted($query, $column, $value)
     {
+        /** @var Builder $query */
         return $query->whereRaw('AES_DECRYPT(' . $column . ', "' . getenv("ENCRYPTION_KEY") . '") NOT LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
     }
 
@@ -243,6 +252,7 @@ class BaseModel extends Model
      */
     public function scopeOrWhereEncrypted($query, $column, $value)
     {
+        /** @var Builder $query */
         return $query->orWhereRaw('AES_DECRYPT(' . $column . ', "' . getenv("ENCRYPTION_KEY") . '") LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
     }
 
@@ -257,6 +267,7 @@ class BaseModel extends Model
      */
     public function scopeOrWhereNotEncrypted($query, $column, $value)
     {
+        /** @var Builder $query */
         return $query->orWhereRaw('AES_DECRYPT(' . $column . ', "' . getenv("ENCRYPTION_KEY") . '") NOT LIKE "' . $value . '" COLLATE utf8mb4_general_ci');
     }
 
@@ -271,6 +282,7 @@ class BaseModel extends Model
      */
     public function scopeOrderByEncrypted($query, $column, $direction)
     {
+        /** @var Builder $query */
         return $query->orderByRaw('AES_DECRYPT(' . $column . ', "' . getenv("ENCRYPTION_KEY") . '") ' . $direction);
     }
 }
