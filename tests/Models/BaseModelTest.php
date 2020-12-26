@@ -6,7 +6,6 @@ namespace IonGhitun\MysqlEncryption\Tests\Models;
 use IonGhitun\MysqlEncryption\Models\BaseModel;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use ReflectionException;
 
 /**
  * Class BaseModelTest
@@ -49,8 +48,6 @@ class BaseModelTest extends TestCase
 
     /**
      * Test getAttribute
-     *
-     * @throws ReflectionException
      */
     public function testEncryptedGetAttribute()
     {
@@ -82,8 +79,6 @@ class BaseModelTest extends TestCase
 
     /**
      * Test toArray
-     *
-     * @throws ReflectionException
      */
     public function testEncryptedToArray()
     {
@@ -113,8 +108,6 @@ class BaseModelTest extends TestCase
 
     /**
      * Test anonymize
-     *
-     * @throws ReflectionException
      */
     public function testAnonymize()
     {

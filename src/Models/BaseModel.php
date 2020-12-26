@@ -88,7 +88,7 @@ class BaseModel extends Model
      *
      * @return string
      */
-    private function generateMysqlAesKey($key)
+    private function generateMysqlAesKey($key): string
     {
         $generatedKey = str_repeat(chr(0), 16);
 
@@ -139,7 +139,7 @@ class BaseModel extends Model
      *
      * @return array
      */
-    public function attributesToArray()
+    public function attributesToArray(): array
     {
         $attributes = parent::attributesToArray();
 
@@ -174,7 +174,7 @@ class BaseModel extends Model
      *
      * @return array
      */
-    public function getEncrypted()
+    public function getEncrypted(): array
     {
         return $this->encrypted;
     }
@@ -184,7 +184,7 @@ class BaseModel extends Model
      *
      * @return array
      */
-    public function getAnonymizable()
+    public function getAnonymizable(): array
     {
         return $this->anonymizable;
     }

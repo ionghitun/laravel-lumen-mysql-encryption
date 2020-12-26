@@ -14,14 +14,14 @@ Database fields encryption in laravel and lumen for mysql databases with native 
 
 ## Dependencies
 
-- php >= 7.2
+- php >= 7.3
 
 ## Documentation:
 
-Service provider is automatically loaded for laravel, for lumen you need to add 
+Service provider is automatically loaded for laravel, for lumen you need to add
 
     $app->register(IonGhitun\MysqlEncryption\MysqlEncryptionServiceProvider::class);
-    
+
 to your `bootstrap/app.php` file.
 
 You need to add `ENCRYPTION_KEY` to your `.env` file, has to be 16 chars long.
@@ -30,23 +30,23 @@ Each of your Models should extend `IonGhitun\MysqlEncryption\Models\BaseModel` a
 
 - in migrations set field to `binary`
 - add `$encrypted` to your model:
-    
+
         /** @var array */
         protected $encrypted = [
             'name',
             'email'
         ];
-        
+
 You can use Validator on these fields with:
 
 - unique_encrypted
 
         unique_encrypted:<table>,<field(optional)>
-        
+
 - exists_encrypted
 
         exists_encrypted:<table>,<field(optional)>
-        
+
 You cannot use basic where, orWhere, orderBy on encrypted fields so there are 5 predefined scopes that you can use as a replacer:
 
 - whereEncrypted
@@ -70,8 +70,8 @@ Example:
         protected $anonymizable = [
             'age' => ['numberBetween', '18','50']
         ];
-        
-- get your model instance  and use anonymize method: `$user->anonymize();`
+
+- get your model instance and use anonymize method: `$user->anonymize();`
 
 The method accepts a locale parameter, if you want to use faker with localization, the default locale can be set in `.env` file: `FAKER_LOCALE = 'en_US'`
 
