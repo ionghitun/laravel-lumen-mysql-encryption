@@ -21,9 +21,9 @@
     "type": "library",
     "require": {
         "php": ">=7.3",
-        "illuminate/database": ">=7.0",
+        "illuminate/database": "^8.0",
         "ext-openssl": "*",
-        "fzaninotto/faker": "^1.0"
+        "fakerphp/faker": "^1.9"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",
