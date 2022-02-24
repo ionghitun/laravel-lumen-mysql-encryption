@@ -8,16 +8,14 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 /**
- * Class BaseModelTest
  *
- * @package IonGhitun\MysqlEncryption\Tests\Models
  */
 class BaseModelTest extends TestCase
 {
     /**
      * Test getAnonymizable
      */
-    public function testGetAnonymizable()
+    public function testGetAnonymizable(): void
     {
         $model = new BaseModel();
 
@@ -27,7 +25,7 @@ class BaseModelTest extends TestCase
     /**
      * Test getEncrypted
      */
-    public function testGetEncrypted()
+    public function testGetEncrypted(): void
     {
         $model = new BaseModel();
 
@@ -37,7 +35,7 @@ class BaseModelTest extends TestCase
     /**
      * Test getAttribute
      */
-    public function tesBaseGetAttribute()
+    public function tesBaseGetAttribute(): void
     {
         $model = new BaseModel();
 
@@ -49,7 +47,7 @@ class BaseModelTest extends TestCase
     /**
      * Test getAttribute
      */
-    public function testEncryptedGetAttribute()
+    public function testEncryptedGetAttribute(): void
     {
         $model = new BaseModel();
 
@@ -68,7 +66,7 @@ class BaseModelTest extends TestCase
     /**
      * Test toArray
      */
-    public function testToArray()
+    public function testToArray(): void
     {
         $model = new BaseModel();
 
@@ -80,7 +78,7 @@ class BaseModelTest extends TestCase
     /**
      * Test toArray
      */
-    public function testEncryptedToArray()
+    public function testEncryptedToArray(): void
     {
         $model = new BaseModel();
 
@@ -99,7 +97,7 @@ class BaseModelTest extends TestCase
     /**
      * Test getOriginal
      */
-    public function testGetOriginal()
+    public function testGetOriginal(): void
     {
         $model = new BaseModel();
 
@@ -109,7 +107,7 @@ class BaseModelTest extends TestCase
     /**
      * Test anonymize
      */
-    public function testAnonymize()
+    public function testAnonymize(): void
     {
         $model = new BaseModel();
 

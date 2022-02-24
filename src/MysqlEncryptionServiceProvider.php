@@ -8,24 +8,22 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Class MysqlEncryptionServiceProvider
  *
- * @package IonGhitun\MysqlEncryption\Providers
  */
 class MysqlEncryptionServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap the application services.
+     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->addValidators();
     }
 
     /**
-     * Add validators for unique and exists.
+     * @return void
      */
-    private function addValidators()
+    private function addValidators(): void
     {
         /**
          * Validate unique binary encrypted
@@ -38,7 +36,8 @@ class MysqlEncryptionServiceProvider extends ServiceProvider
             $field = isset($parameters[1]) ? $parameters[1] : $attribute;
             $ignore = isset($parameters[2]) ? $parameters[2] : null;
 
-            $items = DB::select("SELECT count(*) as aggregate FROM `".$parameters[0]."` WHERE AES_DECRYPT(`".$field."`, '".getenv("ENCRYPTION_KEY")."') LIKE '".$value."' COLLATE utf8mb4_general_ci".($ignore ? " AND id != ".$ignore : ''));
+            $items = DB::select("SELECT count(*) as aggregate FROM `".$parameters[0]."` WHERE AES_DECRYPT(`".$field."`, '".getenv("ENCRYPTION_KEY")."') LIKE ? COLLATE utf8mb4_general_ci".($ignore ? " AND id != ".$ignore : ''),
+                [$value]);
 
             return $items[0]->aggregate === 0;
         });
@@ -53,14 +52,15 @@ class MysqlEncryptionServiceProvider extends ServiceProvider
 
             $field = isset($parameters[1]) ? $parameters[1] : $attribute;
 
-            $items = DB::select("SELECT count(*) as aggregate FROM `".$parameters[0]."` WHERE AES_DECRYPT(`".$field."`, '".getenv("ENCRYPTION_KEY")."') LIKE '".$value."' COLLATE utf8mb4_general_ci");
+            $items = DB::select("SELECT count(*) as aggregate FROM `".$parameters[0]."` WHERE AES_DECRYPT(`".$field."`, '".getenv("ENCRYPTION_KEY")."') LIKE ? COLLATE utf8mb4_general_ci",
+                [$value]);
 
             return $items[0]->aggregate > 0;
         });
     }
 
     /**
-     * Register the application services.
+     * @return void
      */
     public function register()
     {

@@ -8,15 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 /**
- * Class BaseModel
- *
  * @method static Builder|self whereEncrypted($column, $value)
  * @method static Builder|self whereNotEncrypted($column, $value)
  * @method static Builder|self orWhereEncrypted($column, $value)
  * @method static Builder|self orWhereNotEncrypted($column, $value)
  * @method static Builder|self orderByEncrypted($column, $direction)
- *
- * @package IonGhitun\MysqlEncryption\Models
  */
 class BaseModel extends Model
 {
@@ -50,13 +46,13 @@ class BaseModel extends Model
     {
         $value = parent::getAttribute($key);
 
-        if (array_key_exists($key, $this->relations) || method_exists($this, $key)) {
+        if (\array_key_exists($key, $this->relations) || method_exists($this, $key)) {
             return $value;
-        } else {
-            $value = parent::getAttribute($key);
         }
 
-        if (in_array($key, $this->encrypted)) {
+        $value = parent::getAttribute($key);
+
+        if (\in_array($key, $this->encrypted, true)) {
             return $this->aesDecrypt($value);
         }
 
@@ -72,7 +68,7 @@ class BaseModel extends Model
      *
      * @return false|string
      */
-    public function aesDecrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
+    public function aesDecrypt($val, string $cypher = 'aes-128-ecb', bool $mySqlKey = true)
     {
         $secret = getenv('ENCRYPTION_KEY');
 
@@ -90,9 +86,9 @@ class BaseModel extends Model
      */
     private function generateMysqlAesKey($key): string
     {
-        $generatedKey = str_repeat(chr(0), 16);
+        $generatedKey = str_repeat(\chr(0), 16);
 
-        for ($i = 0, $len = strlen($key); $i < $len; $i++) {
+        for ($i = 0, $len = \strlen($key); $i < $len; $i++) {
             $generatedKey[$i % 16] = $generatedKey[$i % 16] ^ $key[$i];
         }
 
@@ -109,7 +105,7 @@ class BaseModel extends Model
      */
     public function setAttribute($key, $value)
     {
-        if (in_array($key, $this->encrypted)) {
+        if (\in_array($key, $this->encrypted, true)) {
             $value = $this->aesEncrypt($value);
         }
 
@@ -125,7 +121,7 @@ class BaseModel extends Model
      *
      * @return false|string
      */
-    public function aesEncrypt($val, $cypher = 'aes-128-ecb', $mySqlKey = true)
+    public function aesEncrypt($val, string $cypher = 'aes-128-ecb', bool $mySqlKey = true)
     {
         $secret = getenv('ENCRYPTION_KEY');
 
@@ -162,7 +158,7 @@ class BaseModel extends Model
      */
     public function getOriginal($key = null, $default = null)
     {
-        if (in_array($key, $this->encrypted)) {
+        if (\in_array($key, $this->encrypted, true)) {
             return $this->aesDecrypt(Arr::get($this->original, $key, $default));
         }
 
@@ -194,16 +190,16 @@ class BaseModel extends Model
      *
      * @param  string|null  $locale
      */
-    public function anonymize($locale = null)
+    public function anonymize($locale = null): void
     {
         $faker = Factory::create($locale ?? (getenv('FAKER_LOCALE') ?? Factory::DEFAULT_LOCALE));
 
         foreach ($this->anonymizable as $field => $type) {
-            if (in_array($field, $this->attributes)) {
+            if (\in_array($field, $this->attributes, true)) {
                 $method = $type[0];
 
-                if (count($type) > 1) {
-                    $this->$field = call_user_func([$faker, $method], array_slice($type, 1));
+                if (\count($type) > 1) {
+                    $this->$field = $faker->$method(\array_slice($type, 1));
                 } else {
                     $this->$field = $faker->$method;
                 }
@@ -222,8 +218,7 @@ class BaseModel extends Model
      */
     public function scopeWhereEncrypted($query, $column, $value)
     {
-        /** @var Builder $query */
-        return $query->whereRaw('AES_DECRYPT('.$column.', "'.getenv("ENCRYPTION_KEY").'") LIKE "'.$value.'" COLLATE utf8mb4_general_ci');
+        return $query->whereRaw('AES_DECRYPT('.$column.', "'.getenv('ENCRYPTION_KEY').'") LIKE ? COLLATE utf8mb4_general_ci', [$value]);
     }
 
     /**
@@ -237,8 +232,7 @@ class BaseModel extends Model
      */
     public function scopeWhereNotEncrypted($query, $column, $value)
     {
-        /** @var Builder $query */
-        return $query->whereRaw('AES_DECRYPT('.$column.', "'.getenv("ENCRYPTION_KEY").'") NOT LIKE "'.$value.'" COLLATE utf8mb4_general_ci');
+        return $query->whereRaw('AES_DECRYPT('.$column.', "'.getenv('ENCRYPTION_KEY').'") NOT LIKE ? COLLATE utf8mb4_general_ci', [$value]);
     }
 
     /**
@@ -252,8 +246,7 @@ class BaseModel extends Model
      */
     public function scopeOrWhereEncrypted($query, $column, $value)
     {
-        /** @var Builder $query */
-        return $query->orWhereRaw('AES_DECRYPT('.$column.', "'.getenv("ENCRYPTION_KEY").'") LIKE "'.$value.'" COLLATE utf8mb4_general_ci');
+        return $query->orWhereRaw('AES_DECRYPT('.$column.', "'.getenv('ENCRYPTION_KEY').'") LIKE ? COLLATE utf8mb4_general_ci', [$value]);
     }
 
     /**
@@ -267,8 +260,7 @@ class BaseModel extends Model
      */
     public function scopeOrWhereNotEncrypted($query, $column, $value)
     {
-        /** @var Builder $query */
-        return $query->orWhereRaw('AES_DECRYPT('.$column.', "'.getenv("ENCRYPTION_KEY").'") NOT LIKE "'.$value.'" COLLATE utf8mb4_general_ci');
+        return $query->orWhereRaw('AES_DECRYPT('.$column.', "'.getenv('ENCRYPTION_KEY').'") NOT LIKE ? COLLATE utf8mb4_general_ci', [$value]);
     }
 
     /**
@@ -282,7 +274,6 @@ class BaseModel extends Model
      */
     public function scopeOrderByEncrypted($query, $column, $direction)
     {
-        /** @var Builder $query */
-        return $query->orderByRaw('AES_DECRYPT('.$column.', "'.getenv("ENCRYPTION_KEY").'") '.$direction);
+        return $query->orderByRaw('AES_DECRYPT('.$column.', "'.getenv('ENCRYPTION_KEY').'") '.$direction);
     }
 }
