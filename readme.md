@@ -14,7 +14,7 @@ Database fields encryption in laravel and lumen for mysql databases with native 
 
 ## Dependencies
 
-- php >= 7.3
+- php >= 7.4
 
 ## Documentation:
 
