@@ -16,7 +16,7 @@
         </testsuite>
     </testsuites>
     <php>
-        <env name="ENCRYPTION_KEY" value="secret16charlong" />
+        <env name="ENCRYPTION_KEY" value="secret16charslong" />
         <env name="FAKER_LOCALE" value="en_US" />
     </php>
 </phpunit>

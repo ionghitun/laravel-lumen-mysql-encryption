@@ -49,15 +49,15 @@ You can use Validator on these fields with:
 
 You cannot use basic where, orWhere, orderBy on encrypted fields so there are 5 predefined scopes that you can use as a replacer:
 
-- whereEncrypted
-- whereNotEncrypted
-- orWhereEncrypted
-- orWhereNotEncrypted
-- orderByEncrypted
+      - whereEncrypted
+      - whereNotEncrypted
+      - orWhereEncrypted
+      - orWhereNotEncrypted
+      - orderByEncrypted
 
 Possibility to anonymize data:
 
-- set `$anonymizable` variable on your model, the data will be anonymize using https://github.com/fzaninotto/Faker, for all the types available check this package.
+- set `$anonymizable` variable on your model, the data will be anonymized using https://github.com/fzaninotto/Faker, for all the types available check this package.
 
 Example:
 

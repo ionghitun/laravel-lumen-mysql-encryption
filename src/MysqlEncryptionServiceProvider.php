@@ -33,10 +33,10 @@ class MysqlEncryptionServiceProvider extends ServiceProvider
                 throw new Exception('unique_encrypted requires at least one parameter');
             }
 
-            $field = isset($parameters[1]) ? $parameters[1] : $attribute;
-            $ignore = isset($parameters[2]) ? $parameters[2] : null;
+            $field = $parameters[1] ?? $attribute;
+            $ignore = $parameters[2] ?? null;
 
-            $items = DB::select("SELECT count(*) as aggregate FROM `".$parameters[0]."` WHERE AES_DECRYPT(`".$field."`, '".getenv("ENCRYPTION_KEY")."') LIKE ".DB::getPdo()->quote($value)." COLLATE utf8mb4_general_ci".($ignore ? " AND id != ".$ignore : ''));
+            $items = DB::select("SELECT count(*) as aggregate FROM `" . $parameters[0] . "` WHERE AES_DECRYPT(`" . $field . "`, '" . getenv("ENCRYPTION_KEY") . "') LIKE " . DB::getPdo()->quote($value) . " COLLATE utf8mb4_general_ci" . ($ignore ? " AND id != " . $ignore : ''));
 
             return $items[0]->aggregate === 0;
         });
@@ -49,9 +49,9 @@ class MysqlEncryptionServiceProvider extends ServiceProvider
                 throw new Exception('exists_encrypted requires at least one parameter');
             }
 
-            $field = isset($parameters[1]) ? $parameters[1] : $attribute;
+            $field = $parameters[1] ?? $attribute;
 
-            $items = DB::select("SELECT count(*) as aggregate FROM `".$parameters[0]."` WHERE AES_DECRYPT(`".$field."`, '".getenv("ENCRYPTION_KEY")."') LIKE ".DB::getPdo()->quote($value)." COLLATE utf8mb4_general_ci");
+            $items = DB::select("SELECT count(*) as aggregate FROM `" . $parameters[0] . "` WHERE AES_DECRYPT(`" . $field . "`, '" . getenv("ENCRYPTION_KEY") . "') LIKE " . DB::getPdo()->quote($value) . " COLLATE utf8mb4_general_ci");
 
             return $items[0]->aggregate > 0;
         });

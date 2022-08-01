@@ -7,12 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use function array_key_exists;
-use function array_slice;
-use function chr;
-use function count;
-use function in_array;
-use function strlen;
 
 /**
  * @method static Builder|self whereEncrypted($column, $value)
@@ -28,7 +22,7 @@ class BaseModel extends Model
      *
      * @var array
      */
-    protected $encrypted = [];
+    protected array $encrypted = [];
 
     /**
      * Elements should be pairs with key column name and value and array with type and optional parameters
@@ -40,14 +34,14 @@ class BaseModel extends Model
      *
      * @var array
      */
-    protected $anonymizable = [];
+    protected array $anonymizable = [];
 
     /**
      * Get model attribute
      *
-     * @param  string  $key
+     * @param $key
      *
-     * @return false|mixed|string
+     * @return mixed
      */
     public function getAttribute($key)
     {
@@ -70,12 +64,12 @@ class BaseModel extends Model
      * Decrypt value
      *
      * @param $val
-     * @param  string  $cypher
-     * @param  bool  $mySqlKey
+     * @param string $cypher
+     * @param bool $mySqlKey
      *
      * @return false|string
      */
-    public function aesDecrypt($val, string $cypher = 'aes-128-ecb', bool $mySqlKey = true)
+    public function aesDecrypt($val, string $cypher = 'aes-128-ecb', bool $mySqlKey = true): bool|string
     {
         $secret = getenv('ENCRYPTION_KEY');
 
@@ -105,8 +99,8 @@ class BaseModel extends Model
     /**
      * Set model attribute
      *
-     * @param  string  $key
-     * @param  mixed  $value
+     * @param $key
+     * @param $value
      *
      * @return mixed
      */
@@ -123,12 +117,12 @@ class BaseModel extends Model
      * Encrypt value
      *
      * @param $val
-     * @param  string  $cypher
-     * @param  bool  $mySqlKey
+     * @param string $cypher
+     * @param bool $mySqlKey
      *
      * @return false|string
      */
-    public function aesEncrypt($val, string $cypher = 'aes-128-ecb', bool $mySqlKey = true)
+    public function aesEncrypt($val, string $cypher = 'aes-128-ecb', bool $mySqlKey = true): bool|string
     {
         $secret = getenv('ENCRYPTION_KEY');
 
@@ -142,7 +136,7 @@ class BaseModel extends Model
      *
      * @return array
      */
-    public function attributesToArray(): array
+    public function attributesToArray()
     {
         $attributes = parent::attributesToArray();
 
@@ -158,10 +152,10 @@ class BaseModel extends Model
     /**
      * Get original not encrypted
      *
-     * @param  string|int|null  $key
-     * @param  mixed|null  $default
+     * @param $key
+     * @param $default
      *
-     * @return array|false|mixed|string
+     * @return mixed|array
      */
     public function getOriginal($key = null, $default = null)
     {
@@ -195,9 +189,11 @@ class BaseModel extends Model
     /**
      * Anonymize model fields
      *
-     * @param  string|null  $locale
+     * @param string|null $locale
+     *
+     * @return void
      */
-    public function anonymize($locale = null): void
+    public function anonymize(string $locale = null): void
     {
         $faker = Factory::create($locale ?? (getenv('FAKER_LOCALE') ?? Factory::DEFAULT_LOCALE));
 
@@ -223,9 +219,9 @@ class BaseModel extends Model
      *
      * @return mixed
      */
-    public function scopeWhereEncrypted($query, $column, $value)
+    public function scopeWhereEncrypted($query, $column, $value): mixed
     {
-        return $query->whereRaw('AES_DECRYPT('.$column.', "'.getenv('ENCRYPTION_KEY').'") LIKE '.DB::getPdo()->quote($value).' COLLATE utf8mb4_general_ci');
+        return $query->whereRaw('AES_DECRYPT(' . $column . ', "' . getenv('ENCRYPTION_KEY') . '") LIKE ' . DB::getPdo()->quote($value) . ' COLLATE utf8mb4_general_ci');
     }
 
     /**
@@ -237,9 +233,9 @@ class BaseModel extends Model
      *
      * @return mixed
      */
-    public function scopeWhereNotEncrypted($query, $column, $value)
+    public function scopeWhereNotEncrypted($query, $column, $value): mixed
     {
-        return $query->whereRaw('AES_DECRYPT('.$column.', "'.getenv('ENCRYPTION_KEY').'") NOT LIKE '.DB::getPdo()->quote($value).' COLLATE utf8mb4_general_ci');
+        return $query->whereRaw('AES_DECRYPT(' . $column . ', "' . getenv('ENCRYPTION_KEY') . '") NOT LIKE ' . DB::getPdo()->quote($value) . ' COLLATE utf8mb4_general_ci');
     }
 
     /**
@@ -251,9 +247,9 @@ class BaseModel extends Model
      *
      * @return mixed
      */
-    public function scopeOrWhereEncrypted($query, $column, $value)
+    public function scopeOrWhereEncrypted($query, $column, $value): mixed
     {
-        return $query->orWhereRaw('AES_DECRYPT('.$column.', "'.getenv('ENCRYPTION_KEY').'") LIKE '.DB::getPdo()->quote($value).' COLLATE utf8mb4_general_ci');
+        return $query->orWhereRaw('AES_DECRYPT(' . $column . ', "' . getenv('ENCRYPTION_KEY') . '") LIKE ' . DB::getPdo()->quote($value) . ' COLLATE utf8mb4_general_ci');
     }
 
     /**
@@ -265,9 +261,9 @@ class BaseModel extends Model
      *
      * @return mixed
      */
-    public function scopeOrWhereNotEncrypted($query, $column, $value)
+    public function scopeOrWhereNotEncrypted($query, $column, $value): mixed
     {
-        return $query->orWhereRaw('AES_DECRYPT('.$column.', "'.getenv('ENCRYPTION_KEY').'") NOT LIKE '.DB::getPdo()->quote($value).' COLLATE utf8mb4_general_ci');
+        return $query->orWhereRaw('AES_DECRYPT(' . $column . ', "' . getenv('ENCRYPTION_KEY') . '") NOT LIKE ' . DB::getPdo()->quote($value) . ' COLLATE utf8mb4_general_ci');
     }
 
     /**
@@ -279,8 +275,8 @@ class BaseModel extends Model
      *
      * @return mixed
      */
-    public function scopeOrderByEncrypted($query, $column, $direction)
+    public function scopeOrderByEncrypted($query, $column, $direction): mixed
     {
-        return $query->orderByRaw('AES_DECRYPT('.$column.', "'.getenv('ENCRYPTION_KEY').'") '.$direction);
+        return $query->orderByRaw('AES_DECRYPT(' . $column . ', "' . getenv('ENCRYPTION_KEY') . '") ' . $direction);
     }
 }
