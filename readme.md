@@ -80,3 +80,8 @@ If is not specified by any method above, the default Faker local will be used by
 Note: Model is not automatically saved!
 
 _Happy coding!_
+
+
+In order to revert data encrypted with this package you need to remove columns from the $encrypted array, do a foreach through your models and save the $this->aesDecrypt($value) for all the columns that were in $encrypted array, then change the column from binary to something more suitable.
+
+After this you can remove the package and extend the basic laravel model, and so cleanup, remove anything related to this package!
